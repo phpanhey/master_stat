@@ -15,14 +15,15 @@ def main():
         6: "50-59",
         7: ">60",
     }
-
+    
     for i in range(1, 8):
+        df_tmp = df.copy()
         for x in df.index:
             if df.loc[x, "Alter"] != i:
-                df_tmp = df.drop(x, inplace=False)
+                df_tmp = df_tmp.drop(x, inplace=False)
 
         print(
-            f"age group {age_group[i]} : {df_tmp['Lokal vs Online: [Keine Beschreibung] 01'].mean()}"
+            f"age group {age_group[i]} : {df_tmp['Lokal vs Online: [Keine Beschreibung] 01'].mean()} 'mean'"
         )
 
 
