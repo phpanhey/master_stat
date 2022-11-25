@@ -55,7 +55,7 @@ def print_descriptive_statistic(df):
     count_greater_60 =len(filter_dataframe(df, "Alter", [age_group['>60']]).index)
     print(f"Die meinsten Teilnehmer waren im Alter von 20-29 Jahren (n={count_20_29}) und 30-39 Jahren (n={count_30_39}). Weniger vertreten war die Altersgruppe 40-49 Jahre(n={count_40_49}). Menschen über 50 Jahre waren {count_50_59 + count_greater_60}.")
 
-    plot(["keine Angabe", "<16", "16-19", "20-29", "30-39", "40-49", "50-59", ">60"],[1, 0, 0, 36, 27, 8, 14, 10],"alterskategorie","teilnehmer","gender_participant.png")
+    plot(list(age_group.keys()),[1, 0, 0, 36, 27, 8, 14, 10],"alterskategorie","teilnehmer","gender_participant.png")
 
     
 
