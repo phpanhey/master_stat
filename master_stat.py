@@ -7,7 +7,8 @@ def main():
     args = parse_args()
     df = import_csv_as_dataframe(args["csv_filename"])
     df = filter_dataframe(df, "Ausschluss", [1])
-    print_descriptive_statistic(df)
+    # print_descriptive_statistic(df)
+    
 
 
 def parse_args():
