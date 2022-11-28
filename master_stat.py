@@ -7,8 +7,7 @@ def main():
     args = parse_args()
     df = import_csv_as_dataframe(args["csv_filename"])
     df = filter_dataframe(df, "Ausschluss", [1])
-    # print_descriptive_statistic(df)
-    
+    analyse_item_six_by_age(df)
 
 
 def parse_args():
@@ -29,16 +28,7 @@ def filter_dataframe(dataframe, column_identifier, filter_params_arr):
     return df_tmp
 
 
-def print_descriptive_statistic(df):
-
-    woman_count = len(filter_dataframe(df, "Geschlecht", [1]).index)
-    man_count = len(filter_dataframe(df, "Geschlecht", [2]).index)
-    divers_count = len(filter_dataframe(df, "Geschlecht", [3]).index)
-
-    print(
-        f"Es haben {len(df.index)} Personen teilgenommen. Davon waren {woman_count} weiblich, {man_count} männlich und {divers_count} divers."
-    )
-
+def analyse_item_six_by_age(df):
     age_group = {
         "keine Angabe": -1,
         "<16": 1,
@@ -49,25 +39,36 @@ def print_descriptive_statistic(df):
         "50-59": 6,
         ">60": 7,
     }
-    count_20_29 =len(filter_dataframe(df, "Alter", [age_group['20-29']]).index)
-    count_30_39 =len(filter_dataframe(df, "Alter", [age_group['30-39']]).index)
-    count_40_49 =len(filter_dataframe(df, "Alter", [age_group['40-49']]).index)
-    count_50_59 =len(filter_dataframe(df, "Alter", [age_group['50-59']]).index)
-    count_greater_60 =len(filter_dataframe(df, "Alter", [age_group['>60']]).index)
-    print(f"Die meinsten Teilnehmer waren im Alter von 20-29 Jahren (n={count_20_29}) und 30-39 Jahren (n={count_30_39}). Weniger vertreten war die Altersgruppe 40-49 Jahre(n={count_40_49}). Menschen über 50 Jahre waren {count_50_59 + count_greater_60}.")
 
-    plot(list(age_group.keys()),[1, 0, 0, 36, 27, 8, 14, 10],"alterskategorie","teilnehmer","gender_participant.png")
+    relevant_fields = [
+        "Vorteile Online Shopping: Bequemlichkeit",
+        "Vorteile Online Shopping: Flexibilität",
+        "Vorteile Online Shopping: 24h-Verfügbarkeit",
+        "Vorteile Online Shopping: Zeitersparnis",
+        "Vorteile Online Shopping: Lieferung nach Hause",
+        "Vorteile Online Shopping: Beratung",
+        "Vorteile Online Shopping: Umfangreiche Produktbeschreibungen",
+        "Vorteile Online Shopping: verschiedene Zahlungsmöglichkeiten",
+    ]
 
-    
+    for relevant_field in relevant_fields:
+        print(f"\n## Item: {relevant_field}##")
+        res = []
+        for key in age_group.keys():
+            df_new = filter_dataframe(df, "Alter", [age_group[key]])
+            mean = float(df_new[relevant_field].mean())
+            res.append(mean)
+            print(f"Altergruppe: {key} mittelwert: {str(mean)}")
+        filename = relevant_field.replace("Vorteile Online Shopping: ", "") + ".png"
+        plot(age_group.keys(), res, "Alter", relevant_field, filename)
 
 
-def plot(x_arr,y_arr,x_label,y_label, filename):
+def plot(x_arr, y_arr, x_label, y_label, filename):
     plt.bar(x_arr, y_arr)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.savefig(filename)
-    
-
+    plt.clf()
 
 
 if __name__ == "__main__":
